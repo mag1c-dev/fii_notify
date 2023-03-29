@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>361727032472-v1e0es56fp1ps18pdqn1gd3d6k00o289.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.361727032472-v1e0es56fp1ps18pdqn1gd3d6k00o289</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCJ57rge2hYSN74kNw7mxrghqjMx5Yynks</string>
+	<key>GCM_SENDER_ID</key>
+	<string>361727032472</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.foxconn.fii.app.fiiNotify</string>
+	<key>PROJECT_ID</key>
+	<string>fii-notify-service</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fii-notify-service.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:361727032472:ios:17b22bb5aab5c97e8ba4ed</string>
+</dict>
+</plist>

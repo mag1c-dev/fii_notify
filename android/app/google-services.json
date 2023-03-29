@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "361727032472",
+    "project_id": "fii-notify-service",
+    "storage_bucket": "fii-notify-service.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:361727032472:android:0dda76d089e3b46c8ba4ed",
+        "android_client_info": {
+          "package_name": "com.foxconn.fii.app.fii_notify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "361727032472-khvhs8aotgennsq2k7aiunrqc1v4d28b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-4KLXZJCQ_ws92jkrDMNbQMMkfo6kuM0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "361727032472-khvhs8aotgennsq2k7aiunrqc1v4d28b.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "361727032472-v1e0es56fp1ps18pdqn1gd3d6k00o289.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.foxconn.fii.app.fiiNotify"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
