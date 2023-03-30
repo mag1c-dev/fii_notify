@@ -40,6 +40,7 @@ abstract class RemoteDataSource {
     int? latestId,
     int? page,
     int? size,
+    NotifyType? notifyType,
   });
   Future<List<SourceModel>> getSources();
 }

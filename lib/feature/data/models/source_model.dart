@@ -9,7 +9,6 @@ class SourceModel extends Source {
     required super.source,
     super.sourceName,
     super.sourceIconURL,
-    super.selected,
   });
 
 factory SourceModel.fromJson(Map<String, dynamic> json) => _$SourceModelFromJson(json);

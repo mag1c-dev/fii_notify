@@ -17,7 +17,7 @@ class NotifyContentPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-            '${notify.sourceName} - ${notify.system}', style: Theme.of(context).appBarTheme.titleTextStyle,),
+            '${notify.source} - ${notify.system}', style: Theme.of(context).appBarTheme.titleTextStyle,),
 
       ),
       body: Column(

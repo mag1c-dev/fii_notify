@@ -42,6 +42,7 @@ class NotifyRepositoryImpl extends NotifyRepository {
     int? latestId,
     int? page,
     int? size,
+    NotifyType? notifyType,
   }) {
     return _remoteDataSource.getNotifyCount(
         source: source,
@@ -49,6 +50,6 @@ class NotifyRepositoryImpl extends NotifyRepository {
         group: group,
         size: size,
         page: page,
-        latestId: latestId);
+        latestId: latestId, notifyType: notifyType);
   }
 }

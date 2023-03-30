@@ -158,7 +158,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'latestId': latestId,
       'page': page,
       'size': size,
-      'notifyType': notifyType
+      'notifyType': notifyType?.json
     };
 
     final result = await _httpClient.get<Map<String, dynamic>>(
@@ -183,7 +183,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       int? group,
       int? latestId,
       int? page,
-      int? size}) async {
+      int? size,     NotifyType? notifyType,
+      }) async {
     final params = {
       'source': source,
       'user': user,
@@ -191,6 +192,8 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       'latestId': latestId,
       'page': page,
       'size': size,
+      'notifyType': notifyType?.json
+
     };
 
     final result = await _httpClient.get<Map<String, dynamic>>(

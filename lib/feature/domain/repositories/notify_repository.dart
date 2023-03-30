@@ -21,5 +21,6 @@ abstract class NotifyRepository {
     int? latestId,
     int? page,
     int? size,
+    NotifyType? notifyType,
   });
 }

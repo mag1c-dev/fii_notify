@@ -23,6 +23,7 @@ import 'feature/domain/usecases/get_login_user_usecase.dart';
 import 'feature/domain/usecases/get_token_usecase.dart';
 import 'feature/domain/usecases/login_usecase.dart';
 import 'feature/domain/usecases/logout_usecase.dart';
+import 'feature/presentation/blocs/setting/setting_bloc.dart';
 
 final GetIt injector = GetIt.instance;
 
@@ -30,6 +31,7 @@ Future<void> initDependency() async {
   injector
     //Blocs
     ..registerLazySingleton(() => AuthenticationBloc())
+    ..registerLazySingleton(() => SettingBloc())
 
     //Usecases
     ..registerLazySingleton(() => LoginUsecase(userRepository: injector()))

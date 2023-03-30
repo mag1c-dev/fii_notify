@@ -13,6 +13,15 @@ class HomePageStarted extends HomeEvent {
 }
 
 
+class LoadMoreRequested extends HomeEvent {
+  final User user;
+
+  const LoadMoreRequested({
+    required this.user,
+  });
+}
+
+
 class NotifyTypeSelected extends HomeEvent {
   final User user;
   final NotifyType? notifyType;
@@ -20,5 +29,17 @@ class NotifyTypeSelected extends HomeEvent {
   const NotifyTypeSelected({
     required this.user,
     this.notifyType,
+  });
+}
+
+
+
+class SourceSelectedHomeEvent extends HomeEvent {
+  final User user;
+  final Source? source;
+
+  const SourceSelectedHomeEvent({
+    required this.user,
+    this.source,
   });
 }

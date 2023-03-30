@@ -19,10 +19,6 @@ class LoginPage extends StatelessWidget {
       onTap: () {},
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        floatingActionButton: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [],
-        ),
         body: Padding(
           padding: const EdgeInsets.all(12),
           child: BlocProvider(

@@ -9,7 +9,31 @@ enum NotifyType {
   @JsonValue('APPROVAL')
   approval,
   @JsonValue('HIGHLIGHT')
-  highlight}
+  highlight
+}
+extension NotifyTypeExt on NotifyType {
+  String? get json => _$NotifyTypeEnumMap[this];
+
+  static const _$NotifyTypeEnumMap = {
+    NotifyType.notice: 'NOTICE',
+    NotifyType.approval: 'APPROVAL',
+    NotifyType.highlight: 'HIGHLIGHT',
+  };
+  String get vnName {
+    switch (this) {
+      case NotifyType.all:
+        return 'Tất cả thông báo';
+      case NotifyType.notice:
+        return 'Thông báo';
+      case NotifyType.approval:
+        return 'Ký duyệt';
+      case NotifyType.highlight:
+        return 'Cảnh báo';
+    }
+  }
+
+}
+
 class Notify {
   int? id;
   String? system;

@@ -18,6 +18,7 @@ class GetNotifyCountUsecase implements Usecase<Future<int>, GetNotifyCountUsecas
       latestId: param.latestId,
       page: param.page,
       size: param.size,
+notifyType: param.notifyType,
     );
   }
 }
@@ -29,7 +30,15 @@ class GetNotifyCountUsecaseParams {
   int? latestId;
   int? page;
   int? size;
+  NotifyType? notifyType;
 
-  GetNotifyCountUsecaseParams(
-      {this.source, this.user, this.group, this.latestId, this.page, this.size});
+  GetNotifyCountUsecaseParams({
+    this.source,
+    this.user,
+    this.group,
+    this.latestId,
+    this.page,
+    this.size,
+    this.notifyType,
+  });
 }

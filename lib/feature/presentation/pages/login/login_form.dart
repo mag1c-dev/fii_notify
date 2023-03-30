@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
@@ -101,12 +102,14 @@ class _UsernameInput extends StatelessWidget {
     return BlocBuilder<LoginBloc, LoginState>(
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
-        return TextField(
+        return TextFormField(
+          validator: (_) => state.username.isNotValid ? 'Invalid username' : null,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
-          decoration: InputDecoration(
+          decoration: const InputDecoration(
             labelText: 'ID Card',
-            errorText: state.username.isNotValid ? 'invalid username' : null,
+            prefixIcon: Icon(Icons.person)
           ),
         );
       },
@@ -122,14 +125,15 @@ class _PasswordInput extends StatelessWidget {
           previous.password != current.password ||
           previous.showPassword != current.showPassword,
       builder: (context, state) {
-        return TextField(
+        return TextFormField(
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
+          validator: (_) => state.password.isNotValid ? 'Invalid password' : null,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: !state.showPassword,
           decoration: InputDecoration(
               labelText: 'Password',
-
-              errorText: state.password.isNotValid ? 'invalid password' : null,
+              prefixIcon: const Icon(Icons.key),
               suffixIcon: IconButton(
                   onPressed: () {
                     context
@@ -155,16 +159,9 @@ class _LoginButton extends StatelessWidget {
       builder: (context, state) {
         return state.submissionStatus.isInProgress
             ? const CircularProgressIndicator()
-            : MaterialButton(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-
+            : CupertinoButton(
                 color: Theme.of(context).primaryColor,
                 disabledColor: Theme.of(context).disabledColor,
-                elevation: 8.0,
-                clipBehavior: Clip.antiAlias,
-                minWidth: double.infinity,
                 onPressed: state.isValidated
                     ? () {
                         context.read<LoginBloc>().add(const LoginSubmitted());
