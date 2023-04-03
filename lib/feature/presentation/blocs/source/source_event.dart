@@ -9,3 +9,12 @@ class SourceLoadStarted extends SourceEvent {
   List<Object?> get props => [];
 
 }
+
+
+class NotifyReadSourceEvent extends SourceEvent {
+
+  @override
+  List<Object?> get props => [];
+
+  const NotifyReadSourceEvent();
+}

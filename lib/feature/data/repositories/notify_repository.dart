@@ -3,6 +3,7 @@ import 'package:fii_notify/feature/domain/repositories/notify_repository.dart';
 import '../../domain/entities/notify.dart';
 import '../data_sources/local/local_data_source.dart';
 import '../data_sources/remote/remote_data_source.dart';
+import '../models/notify_detail_model.dart';
 
 class NotifyRepositoryImpl extends NotifyRepository {
   final LocalDataSource _localDataSource;
@@ -51,5 +52,10 @@ class NotifyRepositoryImpl extends NotifyRepository {
         size: size,
         page: page,
         latestId: latestId, notifyType: notifyType);
+  }
+
+  @override
+  Future<NotifyDetailModel> notifyDetail({required int id}) {
+    return _remoteDataSource.notifyDetail(id: id);
   }
 }

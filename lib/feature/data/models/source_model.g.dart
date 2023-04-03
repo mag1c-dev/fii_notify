@@ -11,6 +11,7 @@ SourceModel _$SourceModelFromJson(Map<String, dynamic> json) => SourceModel(
       source: json['source'] as String,
       sourceName: json['sourceName'] as String?,
       sourceIconURL: json['sourceIconURL'] as String?,
+      unreadNumber: (json['unreadNumber'] as int?)??0,
     );
 
 Map<String, dynamic> _$SourceModelToJson(SourceModel instance) =>
@@ -19,4 +20,5 @@ Map<String, dynamic> _$SourceModelToJson(SourceModel instance) =>
       'source': instance.source,
       'sourceName': instance.sourceName,
       'sourceIconURL': instance.sourceIconURL,
+      'unreadNumber': instance.unreadNumber,
     };

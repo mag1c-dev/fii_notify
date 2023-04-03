@@ -40,6 +40,7 @@ Map<String, dynamic> _$NotifyModelToJson(NotifyModel instance) =>
     };
 
 const _$NotifyTypeEnumMap = {
+  NotifyType.all: null,
   NotifyType.notice: 'NOTICE',
   NotifyType.approval: 'APPROVAL',
   NotifyType.highlight: 'HIGHLIGHT',

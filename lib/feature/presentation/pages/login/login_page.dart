@@ -18,7 +18,7 @@ class LoginPage extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Padding(
           padding: const EdgeInsets.all(12),
           child: BlocProvider(

@@ -1,6 +1,8 @@
+import 'package:fii_notify/feature/domain/entities/notify_detail.dart';
 import 'package:fii_notify/feature/domain/entities/user.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
+import '../../data/models/notify_model.dart';
 import '../entities/notify.dart';
 import '../entities/token.dart';
 
@@ -23,4 +25,6 @@ abstract class NotifyRepository {
     int? size,
     NotifyType? notifyType,
   });
+  Future<NotifyDetail> notifyDetail({required int id});
+
 }

@@ -3,6 +3,7 @@ import 'package:fii_notify/feature/data/models/source_model.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
 import '../../../domain/entities/notify.dart';
+import '../../models/notify_detail_model.dart';
 import '../../models/token_model.dart';
 import '../../models/user_model.dart';
 
@@ -43,4 +44,5 @@ abstract class RemoteDataSource {
     NotifyType? notifyType,
   });
   Future<List<SourceModel>> getSources();
+  Future<NotifyDetailModel> notifyDetail({required int id});
 }

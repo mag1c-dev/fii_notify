@@ -4,7 +4,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
 import 'package:fii_notify/core/di_extension.dart';
-import 'package:fii_notify/feature/domain/entities/user.dart';
 import 'package:fii_notify/feature/domain/usecases/get_notify_list_usecase.dart';
 import 'package:fii_notify/injection_container.dart';
 
@@ -29,29 +28,56 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<SourceSelectedHomeEvent>(
       _onSourceSelectedHomeEvent,
     );
+    on<NotifyReadHomeEvent>(
+      _onNotifyReadHomeEvent,
+    );
+    on<RefreshedHomeEvent>(
+      _onRefreshedHomeEvent,
+    );
+    on<HomePageLoadNotifyRequested>(
+      _onHomePageLoadNotifyRequested,
+    );
   }
 
   final _getNotifyListUsecase = injector<GetNotifyListUsecase>();
 
   FutureOr<void> _onHomePageStarted(
-      HomePageStarted event, Emitter<HomeState> emit) async {
-    add(NotifyTypeSelected(
-      user: event.user,
-    ));
+      HomePageStarted event, Emitter<HomeState> emit) {
+    add(const HomePageLoadNotifyRequested());
   }
 
   FutureOr<void> _onNotifyTypeSelected(
-      NotifyTypeSelected event, Emitter<HomeState> emit) async {
-    try {
-      emit(state.copyWith(
-        loading: true,
-        notifyType: event.notifyType,
-        listNotify: () => null,
-      ));
+      NotifyTypeSelected event, Emitter<HomeState> emit) {
+    emit(state.copyWith(
+      loading: true,
+      notifyType: event.notifyType,
+      listNotify: () => null,
+      loadPage: 0,
+    ));
+    add(const HomePageLoadNotifyRequested());
 
-      final notifies = await _getNotifyListUsecase.call(
-          GetNotifyListUsecaseParams(
-              user: event.user.username, notifyType: event.notifyType));
+  }
+  FutureOr<void> _onSourceSelectedHomeEvent(
+      SourceSelectedHomeEvent event, Emitter<HomeState> emit) {
+    emit(state.copyWith(
+      loading: true,
+      listNotify: () => null,
+      currentSource: () => event.source,
+      loadPage: 0,
+    ));
+    add(const HomePageLoadNotifyRequested());
+
+  }
+
+
+  FutureOr<void> _onHomePageLoadNotifyRequested(HomePageLoadNotifyRequested event, Emitter<HomeState> emit) async{
+    try {
+      final notifies =
+          await _getNotifyListUsecase.call(GetNotifyListUsecaseParams(
+        notifyType: state.notifyType,
+        page: state.loadPage,
+        source: state.currentSource?.source,
+      ));
 
       emit(state.copyWith(
         listNotify: () => notifies,
@@ -62,20 +88,29 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
+
+
+  FutureOr<void> _onRefreshedHomeEvent(
+      RefreshedHomeEvent event, Emitter<HomeState> emit) {
+    add(const HomePageLoadNotifyRequested());
+  }
+
+
   FutureOr<void> _onLoadMoreRequested(
       LoadMoreRequested event, Emitter<HomeState> emit) async {
     try {
       if (state.loading) return;
       emit(state.copyWith(
         loading: true,
+        loadPage: state.loadPage + 1,
       ));
 
       final notifies =
           await _getNotifyListUsecase.call(GetNotifyListUsecaseParams(
-        user: event.user.username,
         notifyType: state.notifyType,
         latestId: state.listNotify?.last.id,
         source: state.currentSource?.source,
+        page: state.loadPage,
       ));
 
       emit(state.copyWith(
@@ -86,6 +121,9 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       _catchError(error, emit);
     }
   }
+
+
+
 
   void _catchError(Object error, Emitter emit) {
     var message = '';
@@ -100,25 +138,21 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     );
   }
 
-  FutureOr<void> _onSourceSelectedHomeEvent(
-      SourceSelectedHomeEvent event, Emitter<HomeState> emit) async {
-    try {
-      emit(state.copyWith(
-        loading: true,
-        listNotify: () => null,
-        currentSource: () => event.source,
-      ));
 
-      final notifies = await _getNotifyListUsecase.call(
-          GetNotifyListUsecaseParams(
-              user: event.user.username, source: event.source?.source));
 
-      emit(state.copyWith(
-        listNotify: () => notifies,
-        loading: false,
-      ));
-    } catch (error) {
-      _catchError(error, emit);
-    }
+  FutureOr<void> _onNotifyReadHomeEvent(
+      NotifyReadHomeEvent event, Emitter<HomeState> emit) async {
+    emit(
+      state.copyWith(
+        listNotify: () => List<Notify>.of(
+          state.listNotify!.map(
+            (e) => e.copyWith(read: (event.notify.id == e.id) ? true : null),
+          ),
+        ),
+      ),
+    );
   }
+
+
+
 }

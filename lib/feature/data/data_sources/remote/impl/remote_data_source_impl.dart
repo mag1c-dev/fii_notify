@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:fii_notify/config/base_url_config.dart';
+import 'package:fii_notify/feature/data/models/notify_detail_model.dart';
 import 'package:fii_notify/feature/data/models/notify_model.dart';
 import 'package:fii_notify/feature/data/models/source_model.dart';
 import 'package:fresh_dio/fresh_dio.dart';
@@ -162,7 +163,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     };
 
     final result = await _httpClient.get<Map<String, dynamic>>(
-      'notify-service/api/notify',
+      'notify-service/api/message',
       queryParameters: params,
       options: buildCacheOptions(const Duration(days: 3),
           maxStale: const Duration(days: 7),
@@ -197,7 +198,7 @@ class RemoteDataSourceImpl implements RemoteDataSource {
     };
 
     final result = await _httpClient.get<Map<String, dynamic>>(
-      'notify-service/api/notify/number-new',
+      'notify-service/api/message/number',
       queryParameters: params,
       options: buildCacheOptions(
         const Duration(days: 3),
@@ -227,5 +228,22 @@ class RemoteDataSourceImpl implements RemoteDataSource {
       (json) => (json as List).map((e) => SourceModel.fromJson(e)).toList(),
     );
     return wrapper.data!;
+  }
+
+  @override
+  Future<NotifyDetailModel> notifyDetail({required int id}) async {
+    final result = await _httpClient.post<Map<String, dynamic>>(
+      'notify-service/api/message/$id/mark-read',
+      options: buildCacheOptions(
+        const Duration(days: 3),
+        maxStale: const Duration(days: 7),
+        forceRefresh: true,
+      ),
+    );
+    // final wrapper = ResponseWrapper<NotifyModel>.fromJson(
+    //   result.data!,
+    //   (json) =>  NotifyModel.fromJson(json as Map<String, dynamic>),
+    // );
+    return NotifyDetailModel();
   }
 }

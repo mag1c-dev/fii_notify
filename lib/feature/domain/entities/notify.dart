@@ -65,4 +65,36 @@ class Notify {
     this.sourceName,
     this.sourceIconURL,
   });
+
+  Notify copyWith({
+    int? id,
+    String? system,
+    String? type,
+    NotifyType? notifyType,
+    String? source,
+    String? from,
+    String? toUser,
+    String? toGroup,
+    Message? message,
+    String? createdAt,
+    String? sourceName,
+    String? sourceIconURL,
+    bool? read,
+  }) {
+    return Notify(
+      id: id ?? this.id,
+      system: system ?? this.system,
+      type: type ?? this.type,
+      notifyType: notifyType ?? this.notifyType,
+      source: source ?? this.source,
+      from: from ?? this.from,
+      toUser: toUser ?? this.toUser,
+      toGroup: toGroup ?? this.toGroup,
+      message: message ?? this.message,
+      createdAt: createdAt ?? this.createdAt,
+      sourceName: sourceName ?? this.sourceName,
+      sourceIconURL: sourceIconURL ?? this.sourceIconURL,
+      read: read ?? this.read,
+    );
+  }
 }

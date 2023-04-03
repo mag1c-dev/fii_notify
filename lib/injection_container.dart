@@ -3,6 +3,7 @@ import 'package:dio_http_cache/dio_http_cache.dart';
 import 'package:fii_notify/feature/domain/repositories/notify_repository.dart';
 import 'package:fii_notify/feature/domain/repositories/source_repository.dart';
 import 'package:fii_notify/feature/domain/usecases/get_notify_count_usecase.dart';
+import 'package:fii_notify/feature/domain/usecases/get_notify_detail_usecase.dart';
 import 'package:fii_notify/feature/domain/usecases/get_notify_list_usecase.dart';
 import 'package:fii_notify/feature/domain/usecases/get_source_list_usecase.dart';
 import 'package:fii_notify/feature/presentation/blocs/authentication/authentication_bloc.dart';
@@ -42,6 +43,8 @@ Future<void> initDependency() async {
         () => GetLoginUserUsecase(userRepository: injector()))
     ..registerLazySingleton(
         () => GetNotifyListUsecase(notifyRepository: injector()))
+    ..registerLazySingleton(
+        () => GetNotifyDetailUsecase(notifyRepository: injector()))
     ..registerLazySingleton(
         () => GetNotifyCountUsecase(notifyRepository: injector()))
     ..registerLazySingleton(() => GetTokenUsecase(userRepository: injector()))

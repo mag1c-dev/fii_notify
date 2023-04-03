@@ -7,27 +7,27 @@ abstract class HomeEvent extends Equatable {
 }
 
 class HomePageStarted extends HomeEvent {
-  final User user;
 
-  const HomePageStarted({required this.user});
+  const HomePageStarted();
+}
+
+
+class HomePageLoadNotifyRequested extends HomeEvent {
+
+  const HomePageLoadNotifyRequested();
 }
 
 
 class LoadMoreRequested extends HomeEvent {
-  final User user;
 
-  const LoadMoreRequested({
-    required this.user,
-  });
+  const LoadMoreRequested();
 }
 
 
 class NotifyTypeSelected extends HomeEvent {
-  final User user;
   final NotifyType? notifyType;
 
   const NotifyTypeSelected({
-    required this.user,
     this.notifyType,
   });
 }
@@ -35,11 +35,27 @@ class NotifyTypeSelected extends HomeEvent {
 
 
 class SourceSelectedHomeEvent extends HomeEvent {
-  final User user;
   final Source? source;
 
   const SourceSelectedHomeEvent({
-    required this.user,
     this.source,
   });
 }
+
+class NotifyReadHomeEvent extends HomeEvent {
+  final Notify notify;
+
+  const NotifyReadHomeEvent({
+    required this.notify,
+  });
+}
+
+
+
+class RefreshedHomeEvent extends HomeEvent {
+
+  const RefreshedHomeEvent();
+}
+
+
+

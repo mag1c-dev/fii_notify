@@ -1,44 +1,31 @@
 part of 'source_bloc.dart';
 
-abstract class SourceState extends Equatable {
-  const SourceState();
-}
 
-class SourceInitial extends SourceState {
-  @override
-  List<Object> get props => [];
-}
+enum SourceStatus {initialize, loading, error, success}
+class SourceState extends Equatable {
 
-
-class SourceLoading extends SourceState {
-  @override
-  List<Object> get props => [];
-}
-
-
-
-class SourceLoadSuccess extends SourceState {
+  final SourceStatus status;
+  final String? error;
   final List<Source>? sources;
 
-  const SourceLoadSuccess({
+  @override
+  List<Object?> get props => [status, error, sources];
+
+  const SourceState({
+    required this.status,
+    this.error,
     this.sources,
   });
 
-  @override
-  List<Object?> get props => [sources];
-
-
-}
-
-
-class SourceLoadError extends SourceState {
-  final String error;
-
-  const SourceLoadError({
-    required this.error,
-  });
-
-  @override
-  List<Object> get props => [error];
-
+  SourceState copyWith({
+    SourceStatus? status,
+    String? error,
+    List<Source>? sources,
+  }) {
+    return SourceState(
+      status: status ?? this.status,
+      error: error ?? this.error,
+      sources: sources ?? this.sources,
+    );
+  }
 }

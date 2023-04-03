@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fii_notify/feature/domain/entities/user.dart';
+import 'package:fii_notify/feature/presentation/blocs/notify_content/notify_content_bloc.dart';
 import 'package:fii_notify/feature/presentation/pages/setting/setting_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import '../../../domain/entities/notify.dart';
 import '../../../domain/entities/source.dart';
@@ -13,7 +14,6 @@ import '../../blocs/authentication/authentication_bloc.dart';
 import '../../blocs/home/home_bloc.dart';
 import '../../blocs/new_message_count/new_message_count_bloc.dart';
 import '../../blocs/source/source_bloc.dart';
-import 'delegate/search_notify_delegate.dart';
 import 'notify_content_page.dart';
 
 class HomePage extends StatefulWidget {
@@ -32,10 +32,7 @@ class _HomePageState extends State<HomePage> {
 
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {
-        context.read<HomeBloc>().add(LoadMoreRequested(
-            user:
-                (context.read<AuthenticationBloc>().state as AuthAuthenticated)
-                    .user));
+        context.read<HomeBloc>().add(const LoadMoreRequested());
       }
     });
   }
@@ -136,144 +133,144 @@ class _HomePageState extends State<HomePage> {
                   ),
                 );
               }),
-              body: CustomScrollView(
-                controller: _scrollController,
-                physics: const BouncingScrollPhysics(),
-                slivers: [
-                  Builder(builder: (context) {
-                    return SliverAppBar(
-                      pinned: false,
-                      floating: true,
-                      snap: false,
-                      title: Text(
-                        'Fii Notify',
-                        style: Theme.of(context).appBarTheme.titleTextStyle,
-                      ),
-                      leading: IconButton(
-                        icon: IconTheme(
-                            data: Theme.of(context).iconTheme,
-                            child: const Icon(Icons.menu)),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      ),
-                      actions: [
-                        IconButton(
-                            onPressed: () {
-                              showSearch(
-                                  context: context,
-                                  delegate: SearchNotifyDelegate());
-                            },
-                            icon: IconTheme(
-                                data: Theme.of(context).iconTheme,
-                                child: const Icon(Icons.search)))
-                      ],
-                    );
-                  }),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 20),
-                    sliver: SliverToBoxAdapter(
-                      child: BlocBuilder<HomeBloc, HomeState>(
-                        builder: (context, state) {
-                          return Text(
-                            state.notifyType.vnName,
-                            style: Theme.of(context).textTheme.titleSmall,
-                          );
-                        },
+              body: RefreshIndicator(
+                onRefresh: () async{
+                  context.read<HomeBloc>().add(const RefreshedHomeEvent());
+                  return Future.delayed(const Duration(seconds: 1));
+                },
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    Builder(builder: (context) {
+                      return SliverAppBar(
+                        pinned: false,
+                        floating: true,
+                        snap: false,
+                        title: Text(
+                          'Fii Notify',
+                          style: Theme.of(context).appBarTheme.titleTextStyle,
+                        ),
+                        leading: IconButton(
+                          icon: IconTheme(
+                              data: Theme.of(context).iconTheme,
+                              child: const Icon(Icons.menu)),
+                          onPressed: () {
+                            Scaffold.of(context).openDrawer();
+                          },
+                        ),
+                        actions: const [
+                          // IconButton(
+                          //     onPressed: () {
+                          //       showSearch(
+                          //           context: context,
+                          //           delegate: SearchNotifyDelegate());
+                          //     },
+                          //     icon: IconTheme(
+                          //         data: Theme.of(context).iconTheme,
+                          //         child: const Icon(Icons.search)))
+                        ],
+                      );
+                    }),
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4.0, horizontal: 20),
+                      sliver: SliverToBoxAdapter(
+                        child: BlocBuilder<HomeBloc, HomeState>(
+                          builder: (context, state) {
+                            return Text(
+                              state.notifyType.vnName,
+                              style: Theme.of(context).textTheme.titleSmall,
+                            );
+                          },
+                        ),
                       ),
                     ),
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 4.0, horizontal: 20),
-                    sliver: SliverToBoxAdapter(
-                      child: BlocBuilder<SourceBloc, SourceState>(
-                        buildWhen: (previous, current) => previous != current,
-                        builder: (context, state) {
-                          if (state is SourceLoading) {
-                            return const Center(
-                              child: CupertinoActivityIndicator(),
-                            );
-                          }
-                          if (state is SourceLoadSuccess) {
-                            return ChipTheme(
-                              data: Theme.of(context).chipTheme,
-                              child: Wrap(
-                                children: state.sources!
-                                    .map((e) => Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 8.0),
-                                          child: _SourceWidget(
-                                            source: e,
-                                            onTap: (Source source, bool value) {
-                                              context.read<HomeBloc>().add(
-                                                  SourceSelectedHomeEvent(
-                                                      user: (context
-                                                                  .read<
-                                                                      AuthenticationBloc>()
-                                                                  .state
-                                                              as AuthAuthenticated)
-                                                          .user,
-                                                      source: value
-                                                          ? source
-                                                          : null));
-                                            },
-                                          ),
-                                        ))
-                                    .toList(),
-                              ),
-                            );
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ),
-                  ),
-                  BlocBuilder<HomeBloc, HomeState>(
-                    builder: (context, state) {
-                      final data = state.listNotify;
-                      if (data == null && state.loading) {
-                        return const SliverFillRemaining(
-                          hasScrollBody: false,
-                          child: Center(
-                            child: CircularProgressIndicator(),
-                          ),
-                        );
-                      }
-                      if (data != null) {
-                        return SliverList(
-                            delegate: SliverChildBuilderDelegate(
-                          (context, index) {
-                            final itemIndex = index ~/ 2;
-                            if (index.isEven) {
-                              return NotifyItem(notify: data[itemIndex]);
-                            }
-                            if (index == data.length * 2 - 1) {
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 4.0, horizontal: 20),
+                      sliver: SliverToBoxAdapter(
+                        child: BlocBuilder<SourceBloc, SourceState>(
+                          buildWhen: (previous, current) => previous != current,
+                          builder: (context, state) {
+                            if (state.status == SourceStatus.loading && state.sources == null) {
                               return const Center(
-                                child: Padding(
-                                  padding: EdgeInsets.all(16.0),
-                                  child: CircularProgressIndicator(),
+                                child: CupertinoActivityIndicator(),
+                              );
+                            }
+                            if (state.sources != null) {
+                              return ChipTheme(
+                                data: Theme.of(context).chipTheme,
+                                child: Wrap(
+                                  children: state.sources!
+                                      .map((e) => Padding(
+                                            padding:
+                                                const EdgeInsets.only(right: 8.0),
+                                            child: _SourceWidget(
+                                              source: e,
+                                              onTap: (Source source, bool value) {
+                                                context.read<HomeBloc>().add(
+                                                    SourceSelectedHomeEvent(
+                                                        source: value
+                                                            ? source
+                                                            : null));
+                                              },
+                                            ),
+                                          ))
+                                      .toList(),
                                 ),
                               );
                             }
-                            return Divider(
-                              color: Theme.of(context).dividerColor,
-                            );
+                            return const SizedBox();
                           },
-                          childCount: max(0, data.length * 2),
-                          semanticIndexCallback: (widget, localIndex) {
-                            if (localIndex.isEven) {
-                              return localIndex ~/ 2;
-                            }
-                            return null;
-                          },
-                        ));
-                      }
-                      return const SliverToBoxAdapter(child: SizedBox());
-                    },
-                  ),
-                ],
+                        ),
+                      ),
+                    ),
+                    BlocBuilder<HomeBloc, HomeState>(
+                      builder: (context, state) {
+                        final data = state.listNotify;
+                        if (data == null && state.loading) {
+                          return const SliverFillRemaining(
+                            hasScrollBody: false,
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+                        if (data != null) {
+                          return SliverList(
+                              delegate: SliverChildBuilderDelegate(
+                            (context, index) {
+                              final itemIndex = index ~/ 2;
+                              if (index.isEven) {
+                                return NotifyItem(notify: data[itemIndex]);
+                              }
+                              if (index == data.length * 2 - 1) {
+                                return const Center(
+                                  child: Padding(
+                                    padding: EdgeInsets.all(16.0),
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                );
+                              }
+                              return Divider(
+                                color: Theme.of(context).dividerColor,
+                              );
+                            },
+                            childCount: max(0, data.length * 2),
+                            semanticIndexCallback: (widget, localIndex) {
+                              if (localIndex.isEven) {
+                                return localIndex ~/ 2;
+                              }
+                              return null;
+                            },
+                          ));
+                        }
+                        return const SliverToBoxAdapter(child: SizedBox());
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           );
@@ -297,17 +294,12 @@ class _SourceWidget extends StatelessWidget {
     final selected =
         source.id == context.watch<HomeBloc>().state.currentSource?.id;
 
-    return ChoiceChip(
+    return RawChip(
+
       label: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            source.source.isNotEmpty ? source.source : 'Other',
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: selected ? Colors.white : null),
-          ),
+
           if (source.sourceIconURL != null) ...[
             const SizedBox(
               width: 5,
@@ -328,14 +320,24 @@ class _SourceWidget extends StatelessWidget {
               fit: BoxFit.fitHeight,
             ),
           ],
+          const SizedBox(width: 5,),
+          Text(
+            '${source.source.isNotEmpty ? source.source : 'Other'} ${source.unreadNumber! > 0 ? '(${source.unreadNumber})': ''}',
+            style: Theme.of(context)
+                .textTheme
+                .bodySmall
+                ?.copyWith(color: selected ? Colors.white : null),
+          ),
         ],
       ),
+
       selectedColor: Theme.of(context).colorScheme.secondary,
       side: BorderSide.none,
       labelPadding: const EdgeInsets.symmetric(vertical: 3, horizontal: 5),
       onSelected: (bool value) {
         onTap.call(source, value);
       },
+      showCheckmark: false,
       selected: selected,
     );
   }
@@ -352,28 +354,28 @@ class NotifyItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
+      onTap: () async {
+        final markReadNotify = await Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => NotifyContentPage(
             notify: notify,
           ),
         ));
+        if (markReadNotify != null && context.mounted) {
+          context.read<HomeBloc>().add(NotifyReadHomeEvent(notify: markReadNotify as Notify));
+          context.read<SourceBloc>().add(const NotifyReadSourceEvent());
+        }
       },
       leading: Container(
         height: 50,
         width: 50,
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          shape: BoxShape.circle,
+          shape: BoxShape.rectangle,
+          borderRadius: BorderRadius.circular(10),
           color: Theme.of(context).colorScheme.primaryContainer,
         ),
         child: Builder(builder: (context) {
-          final String? icon =
-              (context.read<SourceBloc>().state as SourceLoadSuccess)
-                  .sources
-                  ?.where((element) => element.source == notify.source)
-                  .first
-                  .sourceIconURL;
+          final String? icon = notify.sourceIconURL;
           return Center(
             child: icon != null
                 ? CachedNetworkImage(
@@ -385,17 +387,33 @@ class NotifyItem extends StatelessWidget {
           );
         }),
       ),
-      title: Text(
-        '${notify.source} - ${notify.system}',
-        style: Theme.of(context).textTheme.titleMedium,
+      title: Builder(
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                '${notify.source} - ${notify.system}',
+                style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: (notify.read!)?FontWeight.w400:null),
+              ),
+              Text(
+                notify.createdAt ?? '',
+                style: Theme.of(context).textTheme.labelSmall!.copyWith( color: (notify.read!)?Theme.of(context).textTheme.bodySmall?.color?.withOpacity(.6):null, fontWeight: (notify.read!)?FontWeight.w400:null),
+              )
+            ],
+          );
+        }
       ),
       subtitle: Text(
         notify.message?.title ?? '',
-        style: Theme.of(context).textTheme.bodySmall,
+        style: Theme.of(context).textTheme.titleSmall!.copyWith(color: (notify.read!)?Theme.of(context).textTheme.bodySmall?.color?.withOpacity(.6):null, fontWeight: (notify.read!)?FontWeight.w400:null),
       ),
     );
   }
 }
+
+
 
 class _ActionItemModel {
   final NotifyType type;
@@ -431,9 +449,7 @@ class _ActionList extends StatelessWidget {
                 Scaffold.of(context).closeDrawer();
                 context
                     .read<HomeBloc>()
-                    .add(NotifyTypeSelected(user: (context.read<AuthenticationBloc>().state
-                as AuthAuthenticated)
-                    .user, notifyType: e.type));
+                    .add(NotifyTypeSelected( notifyType: e.type));
               },
               selected: currentSelected == e.type,
             ),
@@ -469,11 +485,11 @@ class _ActionItemWidget extends StatelessWidget {
                 color: Theme.of(context).highlightColor,
                 borderRadius: BorderRadius.circular(8),
               ),
-              child: Text('${newCount > 99 ? '99+' : newCount}'),
+              child: Text('${newCount > 99 ? '99+' : newCount}', style: Theme.of(context).textTheme.titleSmall),
             )
           : null,
       selectedTileColor:
-          selected ? Theme.of(context).primaryColor.withOpacity(.1) : null,
+          selected ? Theme.of(context).highlightColor : null,
       onTap: onTap,
       leading: IconTheme(
         data: Theme.of(context).iconTheme,

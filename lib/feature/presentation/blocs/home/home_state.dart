@@ -7,6 +7,7 @@ class HomeState extends Equatable {
   final int? counterNotify;
   final NotifyType notifyType;
   final Source? currentSource;
+  final int loadPage;
 
   @override
   List<Object?> get props => [
@@ -16,6 +17,7 @@ class HomeState extends Equatable {
         counterNotify,
         notifyType,
     currentSource,
+    loadPage
       ];
 
   const HomeState(
@@ -25,6 +27,7 @@ class HomeState extends Equatable {
       this.error,
       this.counterNotify,
       this.currentSource,
+        this.loadPage = 0,
       });
 
   HomeState copyWith({
@@ -32,16 +35,18 @@ class HomeState extends Equatable {
     bool? loading,
     String? error,
     int? counterNotify,
+    int? loadPage,
     NotifyType? notifyType,
     Source? Function()? currentSource,
   }) {
     return HomeState(
       listNotify: listNotify != null ? listNotify() : this.listNotify,
       loading: loading ?? this.loading,
-      error: error ?? this.error,
+      error: error,
       counterNotify: counterNotify ?? this.counterNotify,
       notifyType: notifyType ?? this.notifyType,
       currentSource: currentSource!=null ? currentSource() : this.currentSource,
+      loadPage: loadPage ?? this.loadPage,
     );
   }
 }

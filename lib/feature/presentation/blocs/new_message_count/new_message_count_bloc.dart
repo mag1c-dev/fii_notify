@@ -17,9 +17,9 @@ class NewMessageCountBloc extends Bloc<NewMessageCountEvent, NewMessageCountStat
   final  _getNotifyCountUsecase = injector<GetNotifyCountUsecase>();
   FutureOr<void> _onNewMessageCountLoadRequested(NewMessageCountLoadRequested event, Emitter<NewMessageCountState> emit) async{
     try{
-      final notify = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams(user: event.user, notifyType: NotifyType.notice));
-      final highlight = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams(user: event.user, notifyType: NotifyType.highlight));
-      final approval = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams(user: event.user, notifyType: NotifyType.approval));
+      final notify = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams(notifyType: NotifyType.notice));
+      final highlight = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams( notifyType: NotifyType.highlight));
+      final approval = await _getNotifyCountUsecase.call(GetNotifyCountUsecaseParams(notifyType: NotifyType.approval));
       emit(state.copyWith(approval: approval, highlight: highlight, notify: notify));
     }catch(_){
     }

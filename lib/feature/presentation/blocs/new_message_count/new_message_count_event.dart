@@ -7,12 +7,9 @@ abstract class NewMessageCountEvent extends Equatable {
 
 class NewMessageCountLoadRequested extends NewMessageCountEvent {
 
-  final String user;
 
   @override
-  List<Object?> get props => [user];
+  List<Object?> get props => [];
 
-  const NewMessageCountLoadRequested({
-    required this.user,
-  });
+  const NewMessageCountLoadRequested();
 }
