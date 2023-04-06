@@ -51,10 +51,8 @@ class _AppState extends State<App> {
                 chipSchemeColor: SchemeColor.primaryContainer,
                 chipSelectedSchemeColor: SchemeColor.primary,
                 chipDeleteIconSchemeColor: SchemeColor.tertiary,
-                inputDecoratorBackgroundAlpha: 0x1f,
-                inputDecoratorSchemeColor: SchemeColor.primary,
+                inputDecoratorBorderType: FlexInputBorderType.underline,
               ),
-
               visualDensity: FlexColorScheme.comfortablePlatformDensity,
               useMaterial3: true,
               swapLegacyOnMaterial3: true,
@@ -70,8 +68,8 @@ class _AppState extends State<App> {
                 chipSchemeColor: SchemeColor.primaryContainer,
                 chipSelectedSchemeColor: SchemeColor.primary,
                 chipDeleteIconSchemeColor: SchemeColor.tertiary,
-                inputDecoratorBackgroundAlpha: 0x1f,
-                inputDecoratorSchemeColor: SchemeColor.primary,),
+                inputDecoratorBorderType: FlexInputBorderType.underline,
+              ),
               visualDensity: FlexColorScheme.comfortablePlatformDensity,
               useMaterial3: true,
               swapLegacyOnMaterial3: true,
@@ -105,3 +103,4 @@ class _AppState extends State<App> {
     );
   }
 }
+
