@@ -25,7 +25,7 @@ class GetAppInformationUsecase
       user = await _userRepository.user;
     } catch (_) {}
     final params = {
-      'appName': 'FAIPacking',
+      'appName': 'FIINotify',
       'version': param.version,
       'os': param.os,
       'uuid': param.uuid,
