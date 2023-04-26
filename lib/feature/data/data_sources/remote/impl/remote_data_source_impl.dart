@@ -138,9 +138,23 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   Future<bool> changePassword(
       {required String username,
       required String oldPassword,
-      required String newPassword}) {
-    // TODO: implement changePassword
-    throw UnimplementedError();
+      required String newPassword}) async{
+    final result = await _httpClient.post<Map<String, dynamic>>(
+      'oauth-service/oauth/user/change-password',
+      data: {
+        'username': username,
+        'oldPassword': oldPassword,
+        'newPassword': newPassword
+      },
+      options: Options(
+        contentType: 'application/x-www-form-urlencoded',
+      ),
+    );
+    final wrapper = ResponseWrapper<bool>.fromJson(
+      result.data!,
+          (json) => json! as bool,
+    );
+    return wrapper.result!;
   }
 
   @override
@@ -248,11 +262,11 @@ class RemoteDataSourceImpl implements RemoteDataSource {
         forceRefresh: true,
       ),
     );
-    final wrapper = ResponseWrapper<NotifyModel>.fromJson(
+    final wrapper = ResponseWrapper<NotifyDetailModel>.fromJson(
       result.data!,
-      (json) =>  NotifyModel.fromJson(json as Map<String, dynamic>),
+      (json) =>  NotifyDetailModel.fromJson(json as Map<String, dynamic>),
     );
-    return NotifyDetailModel();
+    return wrapper.data!;
   }
 
 

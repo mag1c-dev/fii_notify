@@ -1,8 +1,10 @@
 import 'package:formz/formz.dart';
 
 enum ConfirmPasswordValidationError {
-  invalid,
-  mismatch,
+  mismatch('Xác nhận mật khẩu không khớp'),
+  invalid('Hãy xác nhận mật khẩu');
+  final String message;
+  const ConfirmPasswordValidationError(this.message);
 }
 
 class ConfirmPassword
@@ -19,16 +21,5 @@ class ConfirmPassword
       return ConfirmPasswordValidationError.invalid;
     }
     return password == value ? null : ConfirmPasswordValidationError.mismatch;
-  }
-}
-
-extension Explanation on ConfirmPasswordValidationError {
-  String? get name {
-    switch (this) {
-      case ConfirmPasswordValidationError.mismatch:
-        return 'Passwords must match';
-      case ConfirmPasswordValidationError.invalid:
-        return 'Confirm password can not empty';
-    }
   }
 }

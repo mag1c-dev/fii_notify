@@ -6,6 +6,7 @@ import 'package:fii_notify/feature/domain/repositories/file_repository.dart';
 import 'package:fii_notify/feature/domain/repositories/notify_repository.dart';
 import 'package:fii_notify/feature/domain/repositories/source_repository.dart';
 import 'package:fii_notify/feature/domain/usecases/cancel_download_usecase.dart';
+import 'package:fii_notify/feature/domain/usecases/change_password_usecase.dart';
 import 'package:fii_notify/feature/domain/usecases/download_usecase.dart';
 import 'package:fii_notify/feature/domain/usecases/get_app_information_usecase.dart';
 import 'package:fii_notify/feature/domain/usecases/get_notify_count_usecase.dart';
@@ -67,6 +68,8 @@ Future<void> initDependency() async {
         () => DownloadUsecase(fileRepository: injector()))
     ..registerLazySingleton(
         () => CancelDownloadUsecase(fileRepository: injector()))
+    ..registerLazySingleton(
+        () => ChangePasswordUsecase(userRepository: injector()))
 
     //repositories
     ..registerLazySingleton<UserRepository>(

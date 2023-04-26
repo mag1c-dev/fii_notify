@@ -14,6 +14,7 @@ abstract class UserRepository {
   });
 
   Future<bool> changePassword({
+    String? username,
     required String oldPassword,
     required String newPassword,
   });

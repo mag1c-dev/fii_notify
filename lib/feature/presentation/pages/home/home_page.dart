@@ -381,6 +381,7 @@ class NotifyItem extends StatelessWidget {
         if (markReadNotify != null && context.mounted) {
           context.read<HomeBloc>().add(NotifyReadHomeEvent(notify: markReadNotify as Notify));
           context.read<SourceBloc>().add(const NotifyReadSourceEvent());
+          context.read<NewMessageCountBloc>().add(const NewMessageCountLoadRequested());
         }
       },
       leading: Container(

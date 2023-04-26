@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 
 import '../../blocs/login/login_bloc.dart';
+import '../change_password/change_password_page.dart';
 
 class LoginForm extends StatelessWidget {
   const LoginForm({super.key});
@@ -17,18 +18,24 @@ class LoginForm extends StatelessWidget {
             showDialog(
               context: context,
               builder: (context) => AlertDialog(
-                title: const Text('Login failed'),
+                title: const Text('Đăng nhập thất bại'),
                 content: const Text(
-                    'Your password have been expired, please change password to continue!'),
+                    'Mật khẩu của bạn đã hết hạn, vui lòng đổi mật khẩu để tiếp tục.'),
                 actions: [
                   TextButton(
                     onPressed: () {
                       Navigator.of(context).pop();
-                      // Navigator.of(context).push(ChangePasswordPage.route(
-                      //     username: state.username.value));
                     },
-                    child: const Text('Confirm'),
-                  )
+                    child: const Text('Huỷ'),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.of(context).push(ChangePasswordPage.route(
+                          username: state.username.value));
+                    },
+                    child: const Text('Xác nhận'),
+                  ),
                 ],
               ),
             );
@@ -63,7 +70,7 @@ class LoginForm extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Login',
+                  'Đăng nhập',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w500)),
                 ),
               const SizedBox(
@@ -103,12 +110,12 @@ class _UsernameInput extends StatelessWidget {
       buildWhen: (previous, current) => previous.username != current.username,
       builder: (context, state) {
         return TextFormField(
-          validator: (_) => state.username.isNotValid ? 'Invalid username' : null,
+          validator: (_) => state.username.isNotValid ? 'Hãy nhập mã thẻ của bạn' : null,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           onChanged: (username) =>
               context.read<LoginBloc>().add(LoginUsernameChanged(username)),
           decoration: const InputDecoration(
-            labelText: 'ID Card',
+            labelText: 'Mã thẻ',
             prefixIcon: Icon(Icons.person)
           ),
         );
@@ -128,11 +135,11 @@ class _PasswordInput extends StatelessWidget {
         return TextFormField(
           onChanged: (password) =>
               context.read<LoginBloc>().add(LoginPasswordChanged(password)),
-          validator: (_) => state.password.isNotValid ? 'Invalid password' : null,
+          validator: (_) => state.password.isNotValid ? 'Vui lòng nhập mật khẩu' : null,
           autovalidateMode: AutovalidateMode.onUserInteraction,
           obscureText: !state.showPassword,
           decoration: InputDecoration(
-              labelText: 'Password',
+              labelText: 'Mật khẩu',
               prefixIcon: const Icon(Icons.key),
               suffixIcon: IconButton(
                   onPressed: () {
@@ -168,7 +175,7 @@ class _LoginButton extends StatelessWidget {
                       }
                     : null,
                 child: const Text(
-                  'Login',
+                  'Đăng nhập',
                   style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

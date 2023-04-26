@@ -23,29 +23,6 @@ class SettingPage extends StatelessWidget {
           ),
           SliverToBoxAdapter(
             child: SwitchListTile(
-              value: false,
-              onChanged: (value) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Chức năng thông báo đang được phát triển')));
-              },
-              title:const Text('Cho phép thông báo'),
-              subtitle:
-              const Text('Cho phép hiển thị thông báo khi có thông báo mới'),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: ListTile(
-              onTap: () {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(const SnackBar(content: Text('Hiện tại ứng dụng chỉ có ngôn ngữ Tiếng Việt (Việt Nam)')));
-              },
-              title:const Text('Ngôn ngữ'),
-              subtitle:const Text(
-                  'Tiếng Việt (Việt Nam)'),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: SwitchListTile(
               value: context.watch<SettingBloc>().state.themeMode ==
                   ThemeMode.dark,
               onChanged: (value) {
@@ -55,6 +32,24 @@ class SettingPage extends StatelessWidget {
               title: const Text('Giao diện tối'),
               subtitle: Text(
                   'Đang ${context.watch<SettingBloc>().state.themeMode == ThemeMode.dark ? 'bật' : 'tắt'}'),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SwitchListTile(
+              value: false,
+              onChanged: null,
+              title:Text('Cho phép thông báo'),
+              subtitle:
+              Text('Cho phép hiển thị thông báo khi có thông báo mới'),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: ListTile(
+              enabled: false,
+              onTap: null,
+              title:Text('Ngôn ngữ'),
+              subtitle:Text(
+                  'Tiếng Việt (Việt Nam)'),
             ),
           ),
           SliverToBoxAdapter(
