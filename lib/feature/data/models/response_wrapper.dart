@@ -21,7 +21,7 @@ class ResponseWrapper<T> {
   Map<String, dynamic> toJson(Object Function(T value) toJsonT) =>
       _$ResponseWrapperToJson(this, toJsonT);
 
-  String? status;
+  dynamic status;
   String? code;
   String? message;
   T? result;

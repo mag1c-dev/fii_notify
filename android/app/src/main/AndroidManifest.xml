@@ -1,5 +1,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.foxconn.fii.app.fii_notify">
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <uses-permission  android:name="android.permission.INSTALL_PACKAGES"
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
         android:label="fii_notify"
         android:name="${applicationName}"
@@ -30,5 +35,14 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+       <provider
+           android:name="com.zhgwu.download_install_apk.DownloadFileProvider"
+           android:authorities="${applicationId}.download_install_apk"
+           android:exported="false"
+           android:grantUriPermissions="true">
+           <meta-data
+               android:name="android.support.FILE_PROVIDER_PATHS"
+               android:resource="@xml/filepaths" />
+       </provider>
     </application>
 </manifest>

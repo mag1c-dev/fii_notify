@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fii_notify/feature/presentation/blocs/notify_content/notify_content_bloc.dart';
 import 'package:fii_notify/feature/presentation/pages/setting/setting_page.dart';
+import 'package:fii_notify/feature/presentation/pages/user/user_information_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -39,6 +40,11 @@ class _HomePageState extends State<HomePage> {
 
   final ScrollController _scrollController = ScrollController();
 
+
+  final _navigationDrawerDestination = [
+
+  ];
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<AuthenticationBloc, AuthenticationState>(
@@ -64,73 +70,79 @@ class _HomePageState extends State<HomePage> {
             child: Scaffold(
               drawer: BlocBuilder<HomeBloc, HomeState>(
                   builder: (context, homeState) {
-                return Drawer(
-                  child: ListView(
-                    children: [
-                      const _DrawerHeader(),
-                      Divider(
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      BlocBuilder<NewMessageCountBloc, NewMessageCountState>(
-                        buildWhen: (previous, current) => previous != current,
-                        builder: (context, state) {
-                          return _ActionList(
-                              currentSelected: homeState.notifyType,
-                              items: [
-                                _ActionItemModel(
-                                  type: NotifyType.all,
-                                  icon: const Icon(Icons.all_inbox),
-                                  newCount: 0,
-                                ),
-                                _ActionItemModel(
-                                  type: NotifyType.notice,
-                                  icon: const Icon(Icons.notifications),
-                                  newCount: state.notify,
-                                ),
-                                _ActionItemModel(
-                                  type: NotifyType.highlight,
-                                  icon: const Icon(Icons.warning),
-                                  newCount: state.highlight,
-                                ),
-                                _ActionItemModel(
-                                  type: NotifyType.approval,
-                                  icon: const Icon(Icons.approval),
-                                  newCount: state.approval,
-                                ),
-                              ]);
-                        },
-                      ),
-                      Divider(
-                        color: Theme.of(context).dividerColor,
-                      ),
-                      ListTile(
-                        onTap: () {
-                          Navigator.of(context).push(SettingPage.route());
-                        },
-                        leading: IconTheme(
-                            data: Theme.of(context).iconTheme,
-                            child: const Icon(
-                              Icons.settings,
-                            )),
-                        title: Text('Cài đặt',
-                            style: Theme.of(context).textTheme.bodyLarge),
-                      ),
-                      ListTile(
-                        onTap: () {
-                          context
-                              .read<AuthenticationBloc>()
-                              .add(AuthenticationLogoutRequested());
-                        },
-                        leading: IconTheme(
-                            data: Theme.of(context).iconTheme,
-                            child: const Icon(
-                              Icons.logout,
-                            )),
-                        title: Text('Đăng xuất',
-                            style: Theme.of(context).textTheme.bodyLarge),
-                      ),
-                    ],
-                  ),
+                return NavigationDrawer(
+                  selectedIndex: 1,
+
+                  children: [
+                    const _DrawerHeader(),
+                    // NavigationDrawerDestination(icon: Icon(Icons.all_inbox_outlined), label: Text(
+                    //     NotifyType.all.vnName), selectedIcon: Icon(Icons.all_inbox)),
+
+                    BlocBuilder<NewMessageCountBloc, NewMessageCountState>(
+                      buildWhen: (previous, current) => previous != current,
+                      builder: (context, state) {
+                        return _ActionList(
+                            currentSelected: homeState.notifyType,
+                            items: [
+                              _ActionItemModel(
+                                type: NotifyType.all,
+                                icon: const Icon(Icons.all_inbox),
+                                newCount: 0,
+                              ),
+                              _ActionItemModel(
+                                type: NotifyType.notice,
+                                icon: const Icon(Icons.notifications),
+                                newCount: state.notify,
+                              ),
+                              _ActionItemModel(
+                                type: NotifyType.highlight,
+                                icon: const Icon(Icons.warning),
+                                newCount: state.highlight,
+                              ),
+                              _ActionItemModel(
+                                type: NotifyType.approval,
+                                icon: const Icon(Icons.approval),
+                                newCount: state.approval,
+                              ),
+                            ]);
+                      },
+                    ),
+                    Divider(
+                      color: Theme.of(context).dividerColor,
+                    ),
+                    // NavigationDrawerDestination(icon: Icon(Icons.settings), label: Text(
+                    //     NotifyType.all.vnName), ),
+
+                    ListTile(
+                      onTap: () {
+                        Navigator.of(context).push(SettingPage.route());
+                      },
+                      leading: IconTheme(
+                          data: Theme.of(context).iconTheme,
+                          child: const Icon(
+                            Icons.settings,
+                          )),
+                      title: Text('Cài đặt',
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ),
+                    ListTile(
+                      onTap: () {
+                        context
+                            .read<AuthenticationBloc>()
+                            .add(AuthenticationLogoutRequested());
+                      },
+                      leading: IconTheme(
+                          data: Theme.of(context).iconTheme,
+                          child: const Icon(
+                            Icons.logout,
+                          )),
+                      title: Text('Đăng xuất',
+                          style: Theme.of(context).textTheme.bodyLarge),
+                    ),
+                  ],
+                  onDestinationSelected: (value) {
+
+                  },
                 );
               }),
               body: RefreshIndicator(
@@ -238,33 +250,39 @@ class _HomePageState extends State<HomePage> {
                           );
                         }
                         if (data != null) {
-                          return SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                            (context, index) {
-                              final itemIndex = index ~/ 2;
-                              if (index.isEven) {
-                                return NotifyItem(notify: data[itemIndex]);
-                              }
-                              if (index == data.length * 2 - 1) {
-                                return const Center(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(16.0),
-                                    child: CircularProgressIndicator(),
-                                  ),
+                          return SliverPadding(
+                            padding: const EdgeInsets.only(bottom: 60.0),
+                            sliver: SliverList(
+                                delegate: SliverChildBuilderDelegate(
+                              (context, index) {
+                                final itemIndex = index ~/ 2;
+                                if (index.isEven) {
+                                  return NotifyItem(notify: data[itemIndex]);
+                                }
+                                if (index == data.length * 2 - 1) {
+                                  if(state.loading){
+                                    return const Center(
+                                      child: Padding(
+                                        padding: EdgeInsets.all(16.0),
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    );
+                                  }
+                                  return const SizedBox();
+                                }
+                                return Divider(
+                                  color: Theme.of(context).dividerColor,
                                 );
-                              }
-                              return Divider(
-                                color: Theme.of(context).dividerColor,
-                              );
-                            },
-                            childCount: max(0, data.length * 2),
-                            semanticIndexCallback: (widget, localIndex) {
-                              if (localIndex.isEven) {
-                                return localIndex ~/ 2;
-                              }
-                              return null;
-                            },
-                          ));
+                              },
+                              childCount: max(0, data.length * 2),
+                              semanticIndexCallback: (widget, localIndex) {
+                                if (localIndex.isEven) {
+                                  return localIndex ~/ 2;
+                                }
+                                return null;
+                              },
+                            )),
+                          );
                         }
                         return const SliverToBoxAdapter(child: SizedBox());
                       },
@@ -508,22 +526,34 @@ class _DrawerHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: CircleAvatar(
-              child: Image.asset('assets/images/avt_default.png'),
-            ),
-          ),
-          Text(
-            'FII Notify',
-            style: Theme.of(context).textTheme.titleLarge,
-          ),
-        ],
-      ),
+    return GestureDetector(
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
+  builder: (context, state) {
+    var name = 'Unknown';
+    var username = '-------';
+    if(state is AuthAuthenticated){
+      name = state.user.name??name;
+      username = state.user.username??username;
+    }
+    return ListTile(
+      onTap: () {
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const UserInformationPage(),));
+      },
+        title: Text(
+          name,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        subtitle: Text(
+          username,
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+        leading: CircleAvatar(
+          child: Image.asset('assets/images/avt_default.png', ),
+        ),
+
+      );
+  },
+),
     );
   }
 }

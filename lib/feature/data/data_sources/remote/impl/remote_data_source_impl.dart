@@ -6,10 +6,15 @@ import 'package:fii_notify/config/base_url_config.dart';
 import 'package:fii_notify/feature/data/models/notify_detail_model.dart';
 import 'package:fii_notify/feature/data/models/notify_model.dart';
 import 'package:fii_notify/feature/data/models/source_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
 import '../../../../../core/utils/token_preferences_storage.dart';
+import '../../../../domain/entities/file_download.dart';
 import '../../../../domain/entities/notify.dart';
+import '../../../models/app_information_model.dart';
+import '../../../models/file_download_model.dart';
 import '../../../models/response_wrapper.dart';
 import '../../../models/token_model.dart';
 import '../../../models/user_model.dart';
@@ -36,6 +41,9 @@ class RemoteDataSourceImpl implements RemoteDataSource {
   late final Dio _httpClient;
 
   late final DioCacheManager _dioCacheManager;
+
+  CancelToken? cancelToken;
+
 
   DioCacheManager get dioCacheManager {
     return _dioCacheManager;
@@ -232,18 +240,77 @@ class RemoteDataSourceImpl implements RemoteDataSource {
 
   @override
   Future<NotifyDetailModel> notifyDetail({required int id}) async {
-    final result = await _httpClient.post<Map<String, dynamic>>(
-      'notify-service/api/message/$id/mark-read',
+    final result = await _httpClient.get<Map<String, dynamic>>(
+      'notify-service/api/message/$id',
       options: buildCacheOptions(
         const Duration(days: 3),
         maxStale: const Duration(days: 7),
         forceRefresh: true,
       ),
     );
-    // final wrapper = ResponseWrapper<NotifyModel>.fromJson(
-    //   result.data!,
-    //   (json) =>  NotifyModel.fromJson(json as Map<String, dynamic>),
-    // );
+    final wrapper = ResponseWrapper<NotifyModel>.fromJson(
+      result.data!,
+      (json) =>  NotifyModel.fromJson(json as Map<String, dynamic>),
+    );
     return NotifyDetailModel();
+  }
+
+
+  @override
+  Future<AppInformationModel> getAppInformation(
+      {required Map<String, dynamic> params}) async {
+    final result = await _httpClient.get<Map<String, dynamic>>(
+      '/fiistore/getVersion',
+      queryParameters: params,
+    );
+    final wrapper = ResponseWrapper<AppInformationModel>.fromJson(result.data!,
+            (json) => AppInformationModel.fromJson(json as Map<String, dynamic>));
+
+    if (wrapper.result == null || wrapper.status == 0) {
+      throw wrapper.message ?? 'Server error.';
+    }
+    return wrapper.result!;
+  }
+
+  @override
+  Stream<FileDownloadModel> downloadFile({
+    required String url,
+    required String savePath,
+  }) {
+    final fileDownload = FileDownloadModel(
+      id: DateTime.now().millisecondsSinceEpoch,
+      name: savePath.split('/').last,
+      path: savePath,
+      url: url,
+    );
+
+    final fileDownloadStream = StreamController<FileDownloadModel>.broadcast();
+
+    _httpClient.download(
+      url,
+      savePath,
+      cancelToken: cancelToken = CancelToken(),
+      onReceiveProgress: (count, total) {
+        fileDownloadStream.sink.add(
+          fileDownload.copyWith(
+            size: total,
+            downloaded: count,
+            status: count == total
+                ? DownloadStatus.success
+                : DownloadStatus.downloading,
+          ),
+        );
+        if (count == total) {
+          fileDownloadStream.close();
+        }
+      },
+    );
+
+    return fileDownloadStream.stream;
+  }
+
+  @override
+  void cancelDownload() {
+    cancelToken?.cancel();
   }
 }

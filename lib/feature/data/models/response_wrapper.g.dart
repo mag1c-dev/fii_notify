@@ -11,7 +11,7 @@ ResponseWrapper<T> _$ResponseWrapperFromJson<T>(
   T Function(Object? json) fromJsonT,
 ) =>
     ResponseWrapper<T>(
-      status: json['status'] as String?,
+      status: json['status'],
       code: json['code'] as String?,
       message: json['message'] as String?,
       result: _$nullableGenericFromJson(json['result'], fromJsonT),

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fii_notify/core/di_extension.dart';
+import 'package:fii_notify/core/extension/di_extension.dart';
 import 'package:fii_notify/core/utils/logger.dart';
 import 'package:fii_notify/feature/domain/entities/notify_detail.dart';
 import 'package:fii_notify/feature/domain/usecases/get_notify_detail_usecase.dart';

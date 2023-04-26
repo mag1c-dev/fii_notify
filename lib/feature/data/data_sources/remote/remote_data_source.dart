@@ -3,6 +3,8 @@ import 'package:fii_notify/feature/data/models/source_model.dart';
 import 'package:fresh_dio/fresh_dio.dart';
 
 import '../../../domain/entities/notify.dart';
+import '../../models/app_information_model.dart';
+import '../../models/file_download_model.dart';
 import '../../models/notify_detail_model.dart';
 import '../../models/token_model.dart';
 import '../../models/user_model.dart';
@@ -45,4 +47,14 @@ abstract class RemoteDataSource {
   });
   Future<List<SourceModel>> getSources();
   Future<NotifyDetailModel> notifyDetail({required int id});
+
+  Future<AppInformationModel> getAppInformation(
+      {required Map<String, dynamic> params});
+
+  Stream<FileDownloadModel> downloadFile({
+    required String url,
+    required String savePath,
+  });
+
+  void cancelDownload();
 }

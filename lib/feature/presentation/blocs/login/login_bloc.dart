@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
-import 'package:fii_notify/core/di_extension.dart';
+import 'package:fii_notify/core/extension/di_extension.dart';
 import 'package:formz/formz.dart';
 
 import '../../../../core/input_model/password.dart';
